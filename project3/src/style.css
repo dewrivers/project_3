@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  /* color: black; */
+  text-decoration: unset;
+}
+
+ul {
+  margin-left: 1.5rem;
+  list-style: none;
+}
+
+button,
+input[type="submit"] {
+  border: none;
+  background: none;
+  color: unset;
+  cursor: pointer;
+}
+
+h1,h2,h3,h4,h5,h6,p,ul,ol {
+  margin: 1em 0;
+}
+/* General */
+body {
+  font-family: "Roboto", sans-serif;
+}
+
+.page {
+  padding: 1rem;
+}
+/* Header */
+
+#header{
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  display: flex;
+  background-color: #573067;
+}
+
+#header .title{
+  margin: 0 0 1rem;
+  padding: 0 1rem;
+  color: white;
+}
+#header .auth-options{
+  height: 100%;
+  display: flex;
+}
+#header .auth-options button{
+  padding: 0 1rem;
+  background-color: #573067;
+  color: #fff;
+  font-size: 1.1rem;
+}
+#header .auth-options button:hover{
+  background-color: #712e8b;
+}
+
+@media screen and (max-width: 550px) {
+  #header .title {
+    font-size: 1.2rem;
+  }
+
+  #header .auth-options button{
+    padding: 0 0.5rem;
+    font-size: .8rem;
+}
+}

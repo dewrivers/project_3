@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import './style.css';
 import {BrowserRouter, Switch, Route} from "react-router-dom";
 import Axios from "axios";
 import Header from './components/layouts/Header';
 import Home from './components/pages/Home';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
-import UserContext from './components/context/UserContext';
+import UserContext from '../src/context/UserContext';
 
+import './style.css';
 
 function App() {
  const [ userData, setUserData ] = useState({
@@ -16,7 +16,7 @@ function App() {
  });
   
   useEffect(() => {
-    const checkLoggedIn = async (user) => {
+    const checkLoggedIn = async () => {
       let token = localStorage.getItem('auth-token');
       if (token === null) { 
       localStorage.setItem('auth-token', '');

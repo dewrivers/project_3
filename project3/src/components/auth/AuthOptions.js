@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import { useHistory } from "react-router-dom";
-import UserContext from "../context/UserContext";
+import UserContext from "../../context/UserContext";
 
 function AuthOptions() {
     const {userData, setUserData} = useContext(UserContext);
@@ -23,7 +23,7 @@ function AuthOptions() {
             ) : (
               <>
                 <button onClick={register}> Register </button>
-                <button onClick={login}> Login in </button>
+                <button onClick={login}> Log in </button>
               </>
             )}
         

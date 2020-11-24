@@ -6,73 +6,74 @@ const User = require('../models/userModel');
 
 // route to register a new user
 router.post("/register", async (req, res) => {
-try {
-    let { email, password, passwordCheck, displayName } = req.body;
+    try {
+        let { email, password, passwordCheck, displayName } = req.body;
 
     //validate 
-    if(!email || !password || !passwordCheck)
-    return res.status(400).json({ message: "Not all fields have been entered." });
+    if (!email || !password || !passwordCheck)
+      return res.status(400).json({ msg: "Not all fields have been entered." });
 
        // password minimun length validation
-    if(password.length < 9)
-    return res
-    .status(400)
-    .json({ message: "The password needs to be at least 9 characters long."});
+       if (password.length < 5)
+       return res
+         .status(400)
+         .json({ msg: "The password needs to be at least 5 characters long." });
 
        //password validation
-    if(password !== passwordCheck)
-    return res
-    .status(400)
-    .json({ message: "Enter the same password twice for verification."});
+       if (password !== passwordCheck)
+       return res
+         .status(400)
+         .json({ msg: "Enter the same password twice for verification." });
 
       // unique email validation
-    const existingUser = await User.findOne({email: email})
-    if (existingUser)
-    return res
-    .status(400)
-    .json({ message: "An account with the same email already exists"})    
-     
-    if (!displayName) displayName = email;
-
+      const existingUser = await User.findOne({ email: email });
+      if (existingUser)
+        return res
+          .status(400)
+          .json({ msg: "An account with this email already exists." });
+  
+      if (!displayName) displayName = email;
+  
     //we are hashing for the sequirity of the passwords
     const salt = await bcrypt.genSalt();
     // This will return compleat gbrige password
     const passwordHash = await bcrypt.hash(password, salt);
+
     //console.log(passwordHash);
     
     // creating a new user
     const newUser = new User({
         email,
         password: passwordHash,
-        displayName
-    });
+        displayName,
+      });
 
     // saving the new user
     const savedUser = await newUser.save();
     res.json(savedUser);
-
-    } 
-    catch(error){
-    res.status(500).json({ error: error.message });
-    }
-    
+  } 
+    catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
+
 //route to login an exists user
 router.post("/login", async (req, res) => {
     try {
         const{ email, password } = req.body;
 
         // validate 
-        if(!email || !password)
-           return res
+           if (!email || !password)
+            return res
            .status(400)
-           .json({ message: "No all fields have been entered."});
+           .json({ msg: "Not all fields have been entered." });
+
         // finding the user that matches the email
         const user = await User.findOne({ email: email });
         if(!user)
            return res
            .status(400)
-           .json({ message: "No account with this email has been registered." });
+           .json({ msg: "No account with this email has been registered." });
 
         const isMatch = await bcrypt.compare(password, user.password);
         if(!isMatch)
@@ -86,7 +87,6 @@ router.post("/login", async (req, res) => {
             user: {
                 id: user._id,
                 displayName: user.displayName,
-                // email: user.email,
             },
         });
     } catch (error) {
@@ -98,30 +98,31 @@ router.delete('/delete', auth, async (req, res) => {
    // console.log(req.user);
 
    try {
-       const deletedUser = await User.findByIdAndDelete(req.user);
-       res.json(deletedUser);
-   } catch (error) {
+    const deletedUser = await User.findByIdAndDelete(req.user);
+    res.json(deletedUser);
+    } 
+    catch (err) {
     res.status(500).json({ error: err.message });
-   }
+    }
 
 });
 // route to check if the user is valid
 router.post("/tokenIsValid", async (req, res) => {
     try {
-       const token = req.header("x-auth-token");
-       if (!token) return res.json(false);
-
-       const verified = jwt.verify(token, process.env.JWT_SECRET);
-       if (!verified) return res.json(false);
-
-       const user = await User.findById(verified.id);
-       if(!user) return res.json(false);
-
-       return res.json(true);
+      const token = req.header("x-auth-token");
+      if (!token) return res.json(false);
+  
+      const verified = jwt.verify(token, process.env.JWT_SECRET);
+      if (!verified) return res.json(false);
+  
+      const user = await User.findById(verified.id);
+      if (!user) return res.json(false);
+  
+      return res.json(true);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+      res.status(500).json({ error: err.message });
     }
-})
+  });
 
 router.get('/', auth, async (req, res) => {
     const user = await User.findById(req.user);

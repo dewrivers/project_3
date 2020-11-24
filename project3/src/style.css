@@ -136,6 +136,11 @@ body {
   color: #ffffff;
 }
 
+.x{
+  width: 40px;
+
+}
+
 /* media queries */
 
 @media screen and (max-width: 550px) {

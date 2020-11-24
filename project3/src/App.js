@@ -7,6 +7,10 @@ import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import UserContext from "./context/UserContext";
 
+import Chat from "./components/chat/Chat";
+import Join from "./components/join/Join";
+// import { BrowserRouter as Router, Route } from "react-router-dom";
+
 import "./style.css";
 
 export default function App() {
@@ -51,6 +55,9 @@ export default function App() {
               <Route exact path="/" component={Home} />
               <Route path="/login" component={Login} />
               <Route path="/register" component={Register} />
+
+              <Route exact path="/" component={Join} />
+              <Route path="/chat" component={Chat} />
             </Switch>
           </div>
         </UserContext.Provider>

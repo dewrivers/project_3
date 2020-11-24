@@ -4,8 +4,8 @@ const cors = require('cors');
 require('dotenv').config();
 const socketio = require('socket.io');
 const http = require('http');
-
-
+ 
+const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
 
 const PORT = process.env.PORT || 7777;
 
@@ -20,25 +20,36 @@ app.use(express.urlencoded({ extended : true }));
 app.use(express.json());
 app.use(cors());
 app.use(express.static("public"));
+app.use(cors());
 app.use(router);
 
 // setting up socket.io connection
 io.on('connection', (socket) =>{
-    console.log('We have new connection');
     
     socket.on('join', ({ name, room }, callback) =>{
-        console.log(name, room);
+        const { error, user } = addUser({ id: socket.id, name, room });
         
         if(error){
             callback({error: error});
         }
-        
-    })
+        socket.emit('message', { user: 'admin', text: `${user.name}, Welcome to the room ${user.room}`});
+        cocket.bradcast.to(user.room).emit('message', { user:'admin', text:`user.name, has joined!`})
+        socket.join(user.room);
+        callback();
+    });
+
+    socket.on('sendMessage', (message, callback) => {
+        const user = getUser(socket.id);
+
+        io.to(user.room).emit('message', { user: user.name, text: message});
+
+        callback();
+    });
     // stting up socket.io disconnection 
     socket.on('disconnect', () =>{
         console.log('User have left!!');
     })
-
+    
 });
 
 // set up mongoose connection

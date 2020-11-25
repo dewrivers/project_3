@@ -78,4 +78,4 @@ app.use('/users', require('./routes/userRoouter'));
 
 
 
-server.listen(PORT,() => console.log(`server running on port ${PORT}`));
+app.listen(PORT,() => console.log(`server running on port ${PORT}`));

@@ -4,6 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 const socketio = require('socket.io');
 const http = require('http');
+const router = require('./routes/Router');
  
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
 
@@ -14,11 +15,10 @@ const PORT = process.env.PORT || 7777;
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
-const router = require('./routes/Router');
+
 
 app.use(express.urlencoded({ extended : true }));
 app.use(express.json());
-app.use(cors());
 app.use(express.static("public"));
 app.use(cors());
 app.use(router);
@@ -33,21 +33,31 @@ io.on('connection', (socket) =>{
             callback({error: error});
         }
         socket.emit('message', { user: 'admin', text: `${user.name}, Welcome to the room ${user.room}`});
-        cocket.bradcast.to(user.room).emit('message', { user:'admin', text:`user.name, has joined!`})
-        socket.join(user.room);
+        socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name} has joined!` });
+        // socket.join(user.room);
+
+        io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
+   
         callback();
     });
 
     socket.on('sendMessage', (message, callback) => {
         const user = getUser(socket.id);
 
-        io.to(user.room).emit('message', { user: user.name, text: message});
+        io.to(user.room).emit('message', { user: user.name, text: message });
 
         callback();
     });
+    
     // stting up socket.io disconnection 
     socket.on('disconnect', () =>{
-        console.log('User have left!!');
+        //console.log('User have left!!');
+        const user = removeUser(socket.id);
+
+     if(user) {
+      io.to(user.room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
+      io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
+    }
     })
     
 });

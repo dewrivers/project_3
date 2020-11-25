@@ -67,10 +67,10 @@ export default function Chat({ location }) {
           <InfoBar room={room} />
           <Messages messages={messages} name={name} />
           <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
-          <Input
+          {/* <Input
           value={message}
           onChange={(event) => setMessage(event.target.value)}
-          onkeypress={(event) => event.key === 'Enter' ? sendMessage(event) : null} />
+          onkeypress={(event) => event.key === 'Enter' ? sendMessage(event) : null} /> */}
           
       </div>
       <TextContainer users={users}/>

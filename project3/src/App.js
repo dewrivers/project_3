@@ -56,7 +56,7 @@ export default function App() {
               <Route path="/login" component={Login} />
               <Route path="/register" component={Register} />
 
-              <Route exact path="/" component={Join} />
+              <Route exact path="/join" component={Join} />
               <Route path="/chat" component={Chat} />
             </Switch>
           </div>
